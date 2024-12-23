@@ -39,7 +39,7 @@ def main():
         if delta_time == 0: continue
         TEXT_MANAGEMENT.FPS.set_value(round(1/delta_time, 2)*SETTINGS.REFERENCE_FPS)
         # ================ OBJECT HANDLER ================
-        spider.render()
+        spider.render(delta_time)
         spider.point_spider_towards_mouse()
         # ================ KEY HANDLER ================
         key = py.key.get_pressed()

@@ -48,7 +48,7 @@ def main():
         TEXT_MANAGEMENT.FPS.set_value(round(1/delta_time, 2)*SETTINGS.REFERENCE_FPS)
         # ================ OBJECT HANDLER ================
         for tentacle in tentacles:
-            tentacle.follow_mouse()
+            tentacle.follow_mouse(delta_time)
             tentacle.render(draw_joint= True)
         # ================ KEY HANDLER ================
         key = py.key.get_pressed()

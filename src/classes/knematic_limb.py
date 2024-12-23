@@ -2,7 +2,9 @@ import numpy as np
 import pygame as py
 from typing import Union
 
-from src.settings.settings import Colors
+from Scripts.activate_this import prev_length
+
+from src.settings.settings import Colors, Settings
 
 point_type = Union[tuple[float, float], np.ndarray]
 def parse_point(point: point_type):
@@ -57,7 +59,13 @@ class Limb:
     def update_pos(self, pos: point_type):
         self.pos = parse_point(pos)
 
-    def update_angle(self, angle_deg: np.float64):
+    def update_angle(self, angle_deg: float, prev_angle: float = None):
+        # if prev_angle is not None:
+        #     # Normalize the angular difference to [-180, 180]
+        #     diff = angle_deg - prev_angle
+        #     if abs(diff) > Settings.MAX_BEND_LIMB:
+        #         angle_deg = prev_angle + np.sign(diff)*Settings.MAX_BEND_LIMB
+
         self.theta = angle_deg
         self.theta_rad = self.theta * np.pi / 180
 
@@ -155,9 +163,9 @@ class Tentacle:
     def get_start_point(self):
         return self.limbs[0].get_start_point()
 
-    def follow_mouse(self):
+    def follow_mouse(self, delta_time: float):
         x, y = py.mouse.get_pos()
-        self.point_towards((x, y))
+        self.point_towards((x, y), delta_time)
 
     def move_tentacle_to(self,pos: point_type):
         self.limbs[0].update_pos(pos)
@@ -171,7 +179,7 @@ class Tentacle:
 
         self.move_tentacle_to(self.limbs[0].get_start_point() + pos)
 
-    def point_towards(self, pos: point_type):
+    def point_towards(self, pos: point_type, delta_time: float):
         objective = parse_point(pos)
         head = self.limbs[-1].get_end_point()
         if np.array_equal(head, objective):
@@ -191,8 +199,11 @@ class Tentacle:
             angle_deg = np.degrees(angle_rad)
             cross_product = v1[0] * v2[1] - v1[1] * v2[0]
             # Update the angle proportionally to the i-th joint
-            new_angle = limb.get_angle() + (np.sign(cross_product) * angle_deg) * self.smooth_factor / (n-i+2)
-            limb.update_angle(new_angle)
+            new_angle = (
+                    limb.get_angle() + (np.sign(cross_product) * angle_deg) *
+                    delta_time * self.smooth_factor / (n-i+2)
+            )
+            limb.update_angle(new_angle, self.limbs[i-1].get_angle() if i >= 1 else None)
 
             self.update_limbs(i)
 

@@ -9,13 +9,14 @@ class Settings:
     HEIGHT: float = 1024
     MARGIN: float = 100
 
-    MOVING_SPEED: float = 1
+    MOVING_SPEED: float = 0.5
 
-    SMOOT_FACTOR: float = 0.1
+    SMOOT_FACTOR: float = 0.05
     N_TENTACLES: int = 5
     N_LIMBS: int = 5
     TOTAL_LENGTH: float = 500
     THICKNESS: float = 15
+    MAX_BEND_LIMB: float = 10
 
 @dataclass
 class Colors:

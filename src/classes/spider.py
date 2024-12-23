@@ -1,9 +1,18 @@
 import pygame as py
 from typing import Union
 import numpy as np
-
+from dataclasses import  dataclass
 from src.classes.knematic_limb import Tentacle, parse_point
 from src.settings.settings import Colors
+
+@dataclass
+class SpiderSettings:
+    leg_n_limbs: int = 2
+    leg_total_length: float = 100
+    leg_min_length: float = 150
+    leg_point_angle: float = 10
+    leg_thickness: float = 2.5
+    leg_smooth_factor: float = 0.25
 
 class Spider():
     def __init__(
@@ -28,24 +37,24 @@ class Spider():
         self.facing_angle_rad = self.facing_angle * np.pi / 180
         self.head_point = self.update_head_point()
 
-        self.leg_n_limbs: int = 2
-        self.leg_total_length: float = 250
-        self.leg_min_length: float = 150
-        self.leg_point_angle: float = 10
-        self.leg_thickness: float = 2.5
-        self.leg_smooth_factor: float = 0.25
+        self.leg_n_limbs: int = SpiderSettings.leg_n_limbs
+        self.leg_total_length: float = SpiderSettings.leg_total_length
+        self.leg_min_length: float = SpiderSettings.leg_min_length
+        self.leg_point_angle: float = SpiderSettings.leg_point_angle
+        self.leg_thickness: float = SpiderSettings.leg_thickness
+        self.leg_smooth_factor: float = SpiderSettings.leg_smooth_factor
 
         self.legs: list[Tentacle] = []
         self.support_points: list[np.ndarray] = []
         self.generate_legs()
         self.generate_support_points()
 
-    def render(self):
+    def render(self, delta_time: float):
         py.draw.circle(self.screen, self.color_body, self.pos, self.radius)
         py.draw.circle(self.screen, Colors.WHITE, self.head_point, 10)
         for (tentacle, point) in zip(self.legs, self.support_points):
             # py.draw.circle(self.screen, Colors.LIGHT_BLUE, point, 10)
-            tentacle.point_towards(point)
+            tentacle.point_towards(point, delta_time)
             tentacle.render()
 
     def update_head_point(self):
@@ -80,7 +89,7 @@ class Spider():
                 screen = self.screen,
                 pos = points[i],
                 n_limbs=self.leg_n_limbs,
-                total_length=self.leg_total_length / 2,
+                total_length=self.leg_total_length,
                 thickness=self.leg_thickness,
                 smooth_factor=self.leg_smooth_factor,
                 color=self.color_legs,

@@ -3,28 +3,20 @@ from typing import Union
 import numpy as np
 from dataclasses import  dataclass
 from src.classes.knematic_limb import Tentacle, parse_point
-from src.settings.settings import Colors
+from src.settings.settings import Colors, SpiderSettings
 
-@dataclass
-class SpiderSettings:
-    leg_n_limbs: int = 2
-    leg_total_length: float = 100
-    leg_min_length: float = 150
-    leg_point_angle: float = 10
-    leg_thickness: float = 2.5
-    leg_smooth_factor: float = 0.25
+
 
 class Spider():
     def __init__(
             self, screen, pos: Union[tuple[float, float], np.ndarray], radius: float, n_legs: int,
-            margin_angle: float,
-            color_body: tuple[int,int,int] = (0,0,0), color_legs: tuple[int,int,int] = (255,255,255)
+            margin_angle: float, total_leg_length: float,  leg_thickness: float,
+            color_body: tuple[int,int,int] = Colors.BLACK, color_legs: tuple[int,int,int] = Colors.BLACK
     ):
         self.screen = screen
         assert n_legs % 2 == 0, "Please provide an even number of legs"
 
         self.pos = parse_point(pos)
-        print(self.pos)
 
         self.radius = radius
         self.n_legs = n_legs
@@ -33,15 +25,20 @@ class Spider():
         self.color_body = color_body
         self.color_legs = color_legs
 
-        self.facing_angle = np.float64(1)
+        # self.facing_angle = np.float64(np.random.uniform(1,360))
+        self.facing_angle = 1
         self.facing_angle_rad = self.facing_angle * np.pi / 180
         self.head_point = self.update_head_point()
+        self.eyes = self.update_eye_point()
+        self.rotate_smooth_factor: float = SpiderSettings.rotate_smooth_factor
 
+        self.render_support: bool = SpiderSettings.render_support
         self.leg_n_limbs: int = SpiderSettings.leg_n_limbs
-        self.leg_total_length: float = SpiderSettings.leg_total_length
+        self.leg_total_length: float = total_leg_length
+        self.leg_support_margin: float = SpiderSettings.leg_support_margin_rate * self.leg_total_length
         self.leg_min_length: float = SpiderSettings.leg_min_length
         self.leg_point_angle: float = SpiderSettings.leg_point_angle
-        self.leg_thickness: float = SpiderSettings.leg_thickness
+        self.leg_thickness: float = leg_thickness
         self.leg_smooth_factor: float = SpiderSettings.leg_smooth_factor
 
         self.legs: list[Tentacle] = []
@@ -51,9 +48,15 @@ class Spider():
 
     def render(self, delta_time: float):
         py.draw.circle(self.screen, self.color_body, self.pos, self.radius)
-        py.draw.circle(self.screen, Colors.WHITE, self.head_point, 10)
+        # py.draw.circle(self.screen, Colors.WHITE, self.head_point, self.radius / 7)
+
+        py.draw.circle(self.screen, Colors.WHITE, self.eyes[0], self.radius / 5)
+        py.draw.circle(self.screen, Colors.WHITE, self.eyes[1], self.radius / 5)
+        py.draw.circle(self.screen, Colors.BLACK, self.eyes[2], self.radius / 10)
+        py.draw.circle(self.screen, Colors.BLACK, self.eyes[3], self.radius / 10)
         for (tentacle, point) in zip(self.legs, self.support_points):
-            # py.draw.circle(self.screen, Colors.LIGHT_BLUE, point, 10)
+            if self.render_support:
+                py.draw.circle(self.screen, Colors.LIGHT_BLUE, point, 10)
             tentacle.point_towards(point, delta_time)
             tentacle.render()
 
@@ -64,6 +67,27 @@ class Spider():
         ])
         self.head_point = point
         return point
+
+    def update_eye_point(self):
+        # Vector from the center of the circle to the head point
+        direction_vector = self.head_point - self.pos
+        direction_vector /= np.linalg.norm(direction_vector)
+        # Get a perpendicular vector (rotate the direction vector by ±90°)
+        perpendicular_vector = np.array([-direction_vector[1], direction_vector[0]])
+        # perpendicular_vector = perpendicular_vector / np.linalg.norm(perpendicular_vector)  # Normalize
+
+        # Scale the perpendicular vector by some offset distance (e.g., half the radius)
+        eye_offset = self.radius * 0.5
+        offset_vector = perpendicular_vector * eye_offset
+
+        # Calculate the two eye points
+        eye1 = self.pos + offset_vector - direction_vector * 15
+        pupil1 = self.pos + offset_vector - direction_vector * 17
+        eye2 = self.pos - offset_vector - direction_vector * 15
+        pupil2 = self.pos - offset_vector - direction_vector * 17
+
+        self.eyes = [eye1, eye2, pupil1, pupil2]
+        return [eye1, eye2, pupil1, pupil2]
 
     def generate_legs(self):
         # Define ranges
@@ -86,8 +110,8 @@ class Spider():
 
         self.legs = [
             Tentacle(
-                screen = self.screen,
-                pos = points[i],
+                screen=self.screen,
+                pos=points[i],
                 n_limbs=self.leg_n_limbs,
                 total_length=self.leg_total_length,
                 thickness=self.leg_thickness,
@@ -126,13 +150,14 @@ class Spider():
         base = tentacle.get_start_point()
         vect = base - self.pos
         vect_normal = vect / np.linalg.norm(vect)
-        return base + vect_normal * self.leg_total_length / 2
+        return base + vect_normal * self.leg_total_length
 
 
     def move_spider_to(self, pos: Union[tuple[float, float], np.ndarray]):
         diff = pos - self.pos
         self.pos = pos
         self.update_head_point()
+        self.update_eye_point()
 
         for i, tentacle, point in zip(range(self.n_legs), self.legs, self.support_points):
             tentacle.move_tentacle_by(diff)
@@ -142,9 +167,9 @@ class Spider():
             v2 = point - tentacle.get_start_point()
             v3 = point - self.pos
             if (
-                    v1[0]**2 + v1[1]**2 > self.leg_total_length**2 or
-                    v2[0]**2 + v2[1]**2 > self.leg_total_length**2 or
-                    v3[0]**2 + v3[1]**2 <= self.radius**2 + 25
+                    v1[0]**2 + v1[1]**2 > self.leg_support_margin**2
+                    # or v2[0]**2 + v2[1]**2 > self.leg_total_length**2
+                    or v3[0]**2 + v3[1]**2 <= self.radius**2 + 25
             ):
                 self.support_points[i] = resting_point
 
@@ -174,7 +199,7 @@ class Spider():
         movement = np.array([np.sin(self.facing_angle_rad), -np.cos(self.facing_angle_rad)])
         self.move_spider_by(movement * delta_time)
 
-    def point_spider_towards_mouse(self):
+    def point_spider_towards_mouse(self, delta_time):
         x, y = py.mouse.get_pos()
         objective = np.array([x, y])
 
@@ -201,7 +226,7 @@ class Spider():
         angle_rad *= np.sign(cross_product)
 
         # Rotate the spider
-        self.rotate_spider(angle_rad*0.005)
+        self.rotate_spider(angle_rad*delta_time*self.rotate_smooth_factor)
         self.move_spider_to(self.pos)
 
 

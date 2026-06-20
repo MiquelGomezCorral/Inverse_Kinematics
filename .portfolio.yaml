@@ -1,0 +1,26 @@
+title:
+  en: Inverse Kinematics
+  es: Cinemática Inversa
+finished: finished
+descriptionShort:
+  en: This is a simple and fast project developed in one day. After being inspired by some YouTube videos, I decided to give it a try. The mathematics involved are simple—just angle operations. The results are quite good, though there is plenty of room for improvement.
+  es: Este es un proyecto simple y rápido que desarrollé en un solo día. Después de ver algunos vídeos en YouTube, decidí probarlo. Las matemáticas detrás son bastante sencillas, solo operaciones con ángulos. El resultado es bastante bueno, aunque hay mucho margen de mejora que se deja al espectador como ejercicio ;).
+descriptionLong:
+  en: |
+    This is a simple and fast project developed in one day using Python, Pygame, and NumPy. After being inspired by some YouTube videos, I decided to give it a try. The mathematics involved are simple—just angle operations. The results are quite good, though there is plenty of room for improvement. The spider section was an experiment to make it work on a moving object, recreating the animation of a walking creature. The perspective is not optimal, and sometimes the legs get stuck in random positions. Nevertheless, the results are quite impressive considering the simplicity of the code.
+  es: |
+    Desarrollé este proyecto en un día utilizando Python, Pygame y NumPy. Después de ver algunos vídeos en YouTube, decidí probarlo, ya que las matemáticas que implica son bastante básicas y solo requieren cálculos con ángulos. El resultado es bueno, aunque se pueden hacer muchas mejoras. La parte de las arañas fue un experimento para aplicarlo a algo en movimiento, simulando la animación de una criatura caminando. La perspectiva no es la mejor y a veces las patas se quedan atascadas en posiciones aleatorias, pero para lo simple que es el código, el resultado es bastante impresionante.
+technologies: [python, pygame, numpy]
+tags: [other]
+logo: readme_images/Kinematics (1).webp
+screenShoots:
+  - readme_images/Kinematics (1).webp
+  - readme_images/Kinematics (2).webp
+  - readme_images/Kinematics (3).webp
+  - readme_images/Kinematics (4).webp
+  - readme_images/Kinematics (5).webp
+  - readme_images/Kinematics (6).webp
+youtube: fmYzdNtMQSY
+slug: Inverse_Kinematics
+order: 50
+featured: false

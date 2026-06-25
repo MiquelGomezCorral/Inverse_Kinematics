@@ -24,6 +24,9 @@ youtube: fmYzdNtMQSY
 keywords:
   en: [inverse kinematics, IK, tentacle animation, spider legs, angle math, procedural movement, creature walking, 2D animation, joint chain, forward kinematics]
   es: [cinemática inversa, IK, animación de tentáculos, patas de araña, matemática de ángulos, movimiento procedural, criatura andante, animación 2D, cadena articular, cinemática directa]
+date:
+  en: Dec 2024
+  es: Dic 2024
 slug: Inverse_Kinematics
 order: 50
 featured: false

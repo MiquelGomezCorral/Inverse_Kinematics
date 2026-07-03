@@ -16,3 +16,16 @@ There are two unit.py files. Une for the simple tentacles and the other for the 
 
 # Links
 - Inspiration: https://youtu.be/GUF3Qr9C7eY?si=mkTGx-T1LfYarFI9
+
+---
+
+<!-- portfolio-gallery:start -->
+## Gallery
+
+<p align="center">
+  <img src="readme_images/Kinematics%20(1)_169.webp" width="48%" />
+  <img src="readme_images/Kinematics%20(2)_169.webp" width="48%" />
+  <img src="readme_images/Kinematics%20(3)_169.webp" width="48%" />
+  <img src="readme_images/Kinematics%20(4)_169.webp" width="48%" />
+</p>
+<!-- portfolio-gallery:end -->

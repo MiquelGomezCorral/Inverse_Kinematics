@@ -12,14 +12,14 @@ descriptionLong:
     Desarrollé este proyecto en un día utilizando Python, Pygame y NumPy. Después de ver algunos vídeos en YouTube, decidí probarlo, ya que las matemáticas que implica son bastante básicas y solo requieren cálculos con ángulos. El resultado es bueno, aunque se pueden hacer muchas mejoras. La parte de las arañas fue un experimento para aplicarlo a algo en movimiento, simulando la animación de una criatura caminando. La perspectiva no es la mejor y a veces las patas se quedan atascadas en posiciones aleatorias, pero para lo simple que es el código, el resultado es bastante impresionante.
 technologies: [python, pygame, numpy]
 tags: [personal]
-logo: readme_images/Kinematics (1).webp
+logo: readme_images/Kinematics (5)_169.webp
 screenShoots:
-  - readme_images/Kinematics (1).webp
-  - readme_images/Kinematics (2).webp
-  - readme_images/Kinematics (3).webp
-  - readme_images/Kinematics (4).webp
-  - readme_images/Kinematics (5).webp
-  - readme_images/Kinematics (6).webp
+  - readme_images/Kinematics (1)_169.webp
+  - readme_images/Kinematics (2)_169.webp
+  - readme_images/Kinematics (3)_169.webp
+  - readme_images/Kinematics (4)_169.webp
+  - readme_images/Kinematics (5)_169.webp
+  - readme_images/Kinematics (6)_169.webp
 youtube: fmYzdNtMQSY
 keywords:
   en: [inverse kinematics, IK, tentacle animation, spider legs, angle math, procedural movement, creature walking, 2D animation, joint chain, forward kinematics]
@@ -30,4 +30,3 @@ date:
 slug: Inverse_Kinematics
 relevancy: 30
 featured: false
-

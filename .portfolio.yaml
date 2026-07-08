@@ -13,6 +13,7 @@ descriptionLong:
 technologies: [python, pygame, numpy]
 tags: [personal]
 logo: readme_images/Kinematics (5)_169.webp
+gif: readme_images/Kinematics.gif
 screenShoots:
   - readme_images/Kinematics (1)_169.webp
   - readme_images/Kinematics (2)_169.webp
